@@ -104,6 +104,33 @@ main{max-width:1180px;padding:18px 20px 48px}
 .replay-details summary span{display:block;margin:3px 0 0 20px}.details-content{padding:0 8px 10px}
 .details-content .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+
+/* Product colors are shared by active orders, cargo and warehouse robot markers. */
+.replay-summary{padding:9px 12px;display:grid;gap:8px;background:#fbfdfa;border-bottom:1px solid #e3ebe5}
+.summary-row{display:flex;align-items:flex-start;gap:11px;min-width:0}
+.summary-label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;min-width:55px;padding-top:6px;color:#72887d}
+.summary-items{display:flex;align-items:center;flex-wrap:wrap;gap:6px;min-width:0}
+.order-card,.cargo-card{display:inline-flex;align-items:center;gap:5px;padding:5px 7px;border:1px solid #dbe7dd;border-radius:9px;background:#fff;font-size:11px;color:#425f4e;white-space:nowrap;min-height:30px}
+.order-card .truck-id,.cargo-card .robot-id{font-weight:800;color:#254f3c;flex-shrink:0}
+.order-card .truck-status{font-size:10px;color:#728a7c;padding-right:3px}
+.order-card .order-progress{color:#557769;font-size:10px;padding-right:2px;font-variant-numeric:tabular-nums}
+.cargo-card{cursor:pointer;font:inherit;font-size:11px}
+.cargo-card:hover,.cargo-card:focus-visible,.cargo-card.selected{border-color:#6da68b;background:#eff8f1}
+.item-code{display:inline-flex;align-items:center;justify-content:center;gap:1px;min-width:24px;min-height:20px;padding:2px 4px;border-radius:5px;background:var(--item-color);color:#fff;font-size:10px;line-height:1;font-weight:800;letter-spacing:.01em;font-variant-numeric:tabular-nums}
+.item-code .quantity{font-size:9px;opacity:.9}
+.summary-empty{font-size:11px;color:#83958a;padding:6px 0}
+.map-panel.focus .replay-summary{position:absolute;left:8px;right:8px;top:calc(58px + env(safe-area-inset-top));z-index:3;border:1px solid #ffffff40;border-radius:10px;background:#f9fdf1ed;max-height:min(35vh,145px);overflow:auto;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .16s,visibility .16s}
+.map-panel.focus.focus-controls-visible .replay-summary{opacity:1;visibility:visible;pointer-events:auto}
+.map-panel.focus .summary-label{min-width:48px}
+@media(max-width:540px){.replay-summary{padding:8px 9px}.summary-row{gap:7px}.summary-label{min-width:45px}.order-card,.cargo-card{gap:4px;padding:4px 5px}.order-card .truck-status{display:none}.summary-items{gap:4px}}
+@media(max-height:460px) and (orientation:landscape){.map-panel.focus .replay-summary{top:8px;left:90px;right:130px;max-height:85px}.map-panel.focus .summary-row{flex-wrap:nowrap}.map-panel.focus .summary-items{flex-wrap:nowrap;overflow:auto}}
+
+.code-key{font-size:11px;color:#627b6c}
+.code-key summary{cursor:pointer;width:max-content;padding:2px 0;font-weight:600}
+.code-legend{display:flex;flex-wrap:wrap;gap:6px 12px;padding:7px 0 4px}
+.code-legend .key-entry{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#4a6557}
+.code-legend .item-code{min-height:17px}
+.map-panel.focus .code-key{color:#416f57}
 </style>
 </head>
 <body>
@@ -126,6 +153,11 @@ main{max-width:1180px;padding:18px 20px 48px}
   <span class="focus-hint" id="focusHint">Tap map for playback controls</span>
 </div>
 <div class="focus-toolbar" id="focusToolbar" aria-label="Immersive replay options"><button class="btn" type="button" id="focusExit" aria-label="Exit map focus">✕ Exit</button><span class="focus-rotate">↻ Rotate phone for landscape</span><span class="focus-round" id="focusRound">Round 0</span></div>
+<div class="replay-summary" id="replaySummary" aria-label="Current orders and carried items">
+  <div class="summary-row"><strong class="summary-label">Orders</strong><div id="activeOrders" class="summary-items" aria-live="off"></div></div>
+  <div class="summary-row"><strong class="summary-label">Carrying</strong><div id="carryingBots" class="summary-items" aria-live="off"></div></div>
+<details class="code-key"><summary>Product code key</summary><div id="codeLegend" class="code-legend"></div></details>
+</div>
 <div class="legend"><span><i class="dot" style="background:#344a57"></i>Wall</span><span><i class="dot" style="background:#decaa7"></i>Item shelf</span><span><i class="dot" style="background:#a7ddc8"></i>Truck loading</span><span><i class="dot" style="background:#df7959"></i>Blocked move</span><span><i class="dot" style="background:#4c87bb;border-radius:50%"></i>Robot</span></div>
 <div class="controls"><button class="btn" id="first" title="First round">|◀</button><button class="btn" id="back" title="Previous round">◀</button><button class="btn primary" id="play" title="Play / pause">▶ Play</button><button class="btn" id="forward" title="Next round">▶</button><button class="btn" id="last" title="Last round">▶|</button><select id="speed" aria-label="Playback speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option><option value="8">8×</option></select><span id="roundText">Round 0</span></div>
 <div class="timeline"><input type="range" id="seek" min="0" max="0" value="0" aria-label="Replay round"><div class="markers" id="markers"></div><div class="muted" style="margin-top:6px">Green = completed order · Orange = blocked action. Click a marker to jump.</div></div>
@@ -161,7 +193,7 @@ const $ = id => document.getElementById(id);
 const canvas=$("map"), ctx=canvas.getContext("2d"), viewport=$("mapViewport"), mapPanel=$("mapPanel");
 const colors=["#3984b8","#bb6b62","#7c67ae","#41977d","#c28a37","#d2699a","#51849a","#967751","#8566bd","#bc6746","#417891","#b06183","#44885d","#bf8a49","#6784af","#ad6e71","#699c71","#8f75ae","#b66e36","#657f8f"];
 const moves={move_up:[0,-1],move_down:[0,1],move_left:[-1,0],move_right:[1,0]};
-let run=null,index=0,selected=0,timer=null,speed=1,events=[];
+let run=null,index=0,selected=0,timer=null,speed=1,events=[],productStyles=new Map();
 let zoom=1,panX=0,panY=0,pinch=null,draggedAt=0,focusVisible=false,focusTimer=null,hintTimer=null;
 const pointers=new Map();
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
@@ -333,7 +365,7 @@ function inspectEvents(){
   events.sort((a,b)=>a.round-b.round);
 }
 function load(value){stop();if(mapPanel.classList.contains("focus"))exitFocus();run=value;index=0;selected=value.states[0].bots[0]?.id??0;
-  zoom=1;panX=0;panY=0;pointers.clear();pinch=null;inspectEvents();$("empty").hidden=true;$("workspace").hidden=false;clearWarn();
+  zoom=1;panX=0;panY=0;pointers.clear();pinch=null;productStyles=buildProductStyles(value.states);renderCodeLegend();inspectEvents();$("empty").hidden=true;$("workspace").hidden=false;clearWarn();
   const pub=value.published;
   const difficulty=pub?.difficulty || ({1:"Easy",3:"Medium",5:"Hard",10:"Expert",20:"Nightmare"}[value.states[0].bots.length]||"Warehouse");
   const type=pub?.source || value.metadata?.source || (value.name.includes("synthetic")?"Demo":"Recorded");
@@ -363,6 +395,102 @@ function buildMarkers(){
   }
 }
 function jump(round){const i=run.states.findIndex(s=>s.round>=round);setIndex(i===-1?run.states.length-1:i);}
+
+const productPalette=["#216d8b","#96503c","#39774c","#774f99","#a35e28","#237f7b","#9f4e78","#73662c","#435ca2","#ad4754","#406b7f","#765534","#4d7770","#944d92","#607835","#876a4c"];
+function productNames(states){
+  const names=new Set();
+  for(const state of states){
+    for(const item of state.items||[])if(item?.type!=null)names.add(String(item.type));
+    for(const bot of state.bots||[])for(const value of bot.inventory||[])names.add(String(value));
+    for(const truck of state.trucks||[])for(const key of ["items_required","items_delivered"])
+      for(const value of truck.order?.[key]||[])names.add(String(value));
+  }
+  return Array.from(names).sort((a,b)=>a.localeCompare(b,"en"));
+}
+function buildProductStyles(states){
+  const styles=new Map(),used=new Set(),names=productNames(states);
+  for(const [index,name] of names.entries()){
+    const clean=name.replace(/[^a-z0-9]/gi,"").toUpperCase()||"ITEM";
+    let code="";
+    for(let length=Math.min(3,clean.length);length<=Math.max(3,Math.min(6,clean.length));length++){
+      const suggestion=clean.slice(0,length);
+      if(!used.has(suggestion)){code=suggestion;break;}
+    }
+    if(!code){
+      const prefix=clean.slice(0,3);let n=2;
+      while(used.has(prefix+n))n++;
+      code=prefix+n;
+    }
+    used.add(code);styles.set(name,{code,color:productPalette[index%productPalette.length]});
+  }
+  return styles;
+}
+function productStyle(name){
+  return productStyles.get(String(name))||{code:"?",color:"#607569"};
+}
+function remainingItems(order){
+  const needed=Array.isArray(order?.items_required)?order.items_required.slice():[];
+  for(const delivered of order?.items_delivered||[]){
+    const at=needed.indexOf(delivered);
+    if(at>=0)needed.splice(at,1);
+  }
+  return needed;
+}
+function itemCount(items){
+  const counts=new Map();
+  for(const name of items||[])counts.set(String(name),(counts.get(String(name))||0)+1);
+  return counts;
+}
+function itemBadge(name,count=1){
+  const badge=node("span",undefined,"item-code"),style=productStyle(name);
+  badge.style.setProperty("--item-color",style.color);
+  badge.appendChild(node("span",style.code));
+  if(count>1)badge.appendChild(node("span","×"+count,"quantity"));
+  badge.title=String(name)+(count>1?" ×"+count:"");
+  badge.setAttribute("aria-label",badge.title);
+  return badge;
+}
+function renderCodeLegend(){
+  const root=$("codeLegend");root.replaceChildren();
+  for(const [name] of productStyles){
+    const entry=node("span",undefined,"key-entry");
+    entry.appendChild(itemBadge(name));
+    entry.appendChild(node("span",name));
+    root.appendChild(entry);
+  }
+}
+function renderOrderCargo(state){
+  const orders=$("activeOrders"),carriers=$("carryingBots");
+  orders.replaceChildren();carriers.replaceChildren();
+  let active=0;
+  for(const truck of state.trucks||[]){
+    const order=truck.order;
+    if(!order||order.complete===true)continue;
+    const required=Array.isArray(order.items_required)?order.items_required:[];
+    const needed=remainingItems(order);
+    if(!required.length||!needed.length)continue;
+    active++;
+    const card=node("div",undefined,"order-card");
+    card.title="Truck "+truck.id+" • "+truck.state+" • "+(order.id||"active order");
+    card.append(node("span","T"+truck.id,"truck-id"),
+      node("span",String(truck.state||"").replace(/^./,char=>char.toUpperCase()),"truck-status"),
+      node("span",(required.length-needed.length)+"/"+required.length,"order-progress"));
+    for(const [name,count] of itemCount(needed))card.appendChild(itemBadge(name,count));
+    orders.appendChild(card);
+  }
+  if(!active)orders.appendChild(node("span","No active orders","summary-empty"));
+  const loaded=(state.bots||[]).filter(bot=>Array.isArray(bot.inventory)&&bot.inventory.length);
+  for(const bot of loaded){
+    const card=node("button",undefined,"cargo-card"+(selected===bot.id?" selected":""));
+    card.type="button";card.title="Highlight robot "+bot.id;
+    card.appendChild(node("span","R"+bot.id,"robot-id"));
+    for(const [name,count] of itemCount(bot.inventory))card.appendChild(itemBadge(name,count));
+    card.addEventListener("click",()=>{selected=bot.id;render();});
+    carriers.appendChild(card);
+  }
+  if(!loaded.length)carriers.appendChild(node("span","No cargo onboard","summary-empty"));
+}
+
 function color(bot){return colors[Math.abs(Number(bot)||0)%colors.length];}
 function roundedRect(x,y,w,h,r,fill){ctx.fillStyle=fill;ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill();}
 function renderMap(state){
@@ -399,13 +527,12 @@ function renderMap(state){
     roundedRect(x*size+2,y*size+3,size-4,size-6,4,"#b18d60");
     roundedRect(x*size+4,y*size+3,size-8,size-12,3,"#ead1a7");
     const name=String(items[0].type||"?");
-    let hash=0;for(const ch of name)hash=(hash*31+ch.charCodeAt(0))|0;
-    const crateColors=["#5ca9a0","#d37c69","#8ea95a","#b68dbe","#dbb264"];
-    ctx.fillStyle=crateColors[Math.abs(hash)%crateColors.length];
+    const product=productStyle(name);
+    ctx.fillStyle=product.color;
     ctx.fillRect(x*size+7,y*size+8,size-14,12);
     ctx.fillStyle="rgba(255,255,255,.3)";ctx.fillRect(x*size+9,y*size+9,size-18,3);
     ctx.fillStyle="#68553b";ctx.font="bold 9px sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";
-    ctx.fillText(name.slice(0,5),x*size+size/2,y*size+size-12);
+    ctx.fillText(product.code,x*size+size/2,y*size+size-12);
     if(items.length>1){ctx.fillStyle="#2f4145";ctx.font="bold 9px sans-serif";ctx.fillText("×"+items.length,x*size+size-6,y*size+6);}
   }
   const trail=run.states.slice(Math.max(0,index-16),index+1).map(s=>s.bots.find(b=>b.id===selected)?.position).filter(Boolean);
@@ -420,7 +547,16 @@ function renderMap(state){
     ctx.fillStyle="#22313c";ctx.fillRect(pX-16,pY-5,3,12);ctx.fillRect(pX+13,pY-5,3,12);
     if(b.id===selected){ctx.strokeStyle="#f6ad62";ctx.lineWidth=3;ctx.strokeRect(pX-17,pY-17,34,35);}
     ctx.fillStyle="#fff";ctx.textAlign="center";ctx.textBaseline="middle";ctx.font="bold 12px sans-serif";ctx.fillText(b.id,pX,pY+2);
-    if((b.inventory||[]).length){ctx.fillStyle="#223a34";ctx.beginPath();ctx.arc(pX+12,pY-12,8,0,Math.PI*2);ctx.fill();ctx.fillStyle="#fff";ctx.font="bold 10px sans-serif";ctx.fillText(b.inventory.length,pX+12,pY-12);}
+    if((b.inventory||[]).length){
+      // Three color slots reveal the actual cargo types rather than a count.
+      const cargo=b.inventory.slice(0,3),slot=10,gap=1,total=cargo.length*slot+(cargo.length-1)*gap;
+      const start=pX-total/2;
+      for(let i=0;i<cargo.length;i++){
+        const s=productStyle(cargo[i]);
+        roundedRect(start+i*(slot+gap),pY+12,slot,9,2,"#203d36");
+        roundedRect(start+i*(slot+gap)+1,pY+13,slot-2,7,1,s.color);
+      }
+    }
   }
 }
 function renderTrucks(s){
@@ -458,7 +594,7 @@ function render(){
   $("score").textContent=String(finished&&typeof run.result?.score==="number"?run.result.score:s.score??"—");
   $("orders").textContent=String(finished&&typeof run.result?.orders_completed==="number"?run.result.orders_completed:s.orders_completed??"—");
   $("robots").textContent=String(s.bots.length);$("blocked").textContent=String(events.filter(e=>e.kind==="blocked"&&e.round<=s.round).length);
-  renderMap(s);layoutMap();renderRobot(s);renderTrucks(s);renderEvents(s);
+  renderMap(s);layoutMap();renderOrderCargo(s);renderRobot(s);renderTrucks(s);renderEvents(s);
 }
 async function onFile(file){
   if(!file)return;try{if(file.size>75*1024*1024)throw Error("File is larger than 75 MB. Please split recordings into individual runs.");
