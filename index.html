@@ -1,52 +1,27 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Watch Grocerybot offline and ranked warehouse runs, frame by frame.">
-<meta name="theme-color" content="#f4f7f4">
-<title>Grocerybot · Replay Archive</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Grocerybot offline and ranked public run replays">
+<title>Grocerybot · Replay archive</title>
 <style>
-:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#233a31;background:#f4f7f4;-webkit-font-smoothing:antialiased}
+:root{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#253932;background:#f4f7f4}
 *{box-sizing:border-box}body{margin:0}
-header{background:#fff;border-bottom:1px solid #e1e9e4}
-header>div{max-width:1000px;margin:0 auto;padding:19px 22px;display:flex;align-items:center;gap:9px}
-header strong{font-size:21px;font-weight:850;letter-spacing:-.05em}
-header span{font-size:14px;color:#87a094}
-main{max-width:1000px;padding:36px 22px 70px;margin:0 auto}
-.eyebrow{font-size:11px;letter-spacing:.16em;font-weight:800;color:#49846a;text-transform:uppercase}
-h1{font-size:clamp(32px,6vw,49px);line-height:1.06;letter-spacing:-.055em;margin:10px 0}
-p{font-size:14px;line-height:1.75;color:#657e71}
-.lead{max-width:680px;margin:13px 0 30px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:14px}
-a.card{text-decoration:none;color:inherit;display:block;padding:21px;background:#fff;border:1px solid #dae7df;border-radius:16px;box-shadow:0 2px 15px #1b362a07;transition:border-color .15s,transform .15s}
-a.card:hover{border-color:#77b596;transform:translateY(-1px)}
-.card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.card strong{font-size:17px}.pill{font-size:10px;font-weight:800;letter-spacing:.08em;background:#e5f3e9;color:#338057;padding:5px 9px;border-radius:99px}
-.preview{margin:17px -4px 14px;aspect-ratio:16/7;background:repeating-linear-gradient(90deg,#e9efea 0 34px,#e3ebe5 34px 35px);border:1px solid #dae6dc;border-radius:10px;overflow:hidden;position:relative}
-.shelf{position:absolute;background:#b68c5a;border:3px solid #e2bd8d;border-radius:3px;width:13%;height:33%;top:21%}
-.bot{position:absolute;width:9%;aspect-ratio:1;border-radius:7px;background:#4388bb;border:3px solid #234757;box-shadow:0 2px 4px #2c534a40}
-.bot:after{content:"";position:absolute;top:3px;left:3px;right:3px;height:4px;background:#a6d1e4;border-radius:2px}
-.card p{margin:0;min-height:48px;font-size:13px}.open{display:inline-block;margin-top:18px;font-size:13px;font-weight:750;color:#247b53}
-h2{font-size:18px;letter-spacing:-.035em;margin:42px 0 8px}
-.note{padding:18px 20px;background:#fff;border:1px solid #e0e8e2;border-radius:13px;max-width:680px}
-footer{margin-top:42px;color:#859b90;font-size:12px}
-@media(max-width:550px){main{padding:30px 15px 55px}header>div{padding:16px 15px}.card p{min-height:0}}
-</style></head>
-<body>
-<header><div><strong>grocerybot</strong><span>/ replay archive</span></div></header>
-<main>
-<div class="eyebrow">Warehouse replay lab</div>
-<h1>Watch the robots work.</h1>
-<p class="lead">Replay Grocerybot runs in your browser. Follow robot movements, inspect truck orders, and scrub through the warehouse timeline. No download, ZIP extraction, or login needed.</p>
-<div class="grid">
-<a class="card" href="runs/demo.html" aria-label="Open synthetic warehouse replay demo">
-<div class="card-top"><strong>Warehouse replay</strong><span class="pill">TRY DEMO</span></div>
-<div class="preview" aria-hidden="true"><span class="shelf" style="left:25%"></span><span class="shelf" style="left:51%;top:40%"></span><span class="bot" style="left:15%;top:62%"></span><span class="bot" style="left:72%;top:20%;background:#ba6b65"></span></div>
-<p>Test playback, the round timeline, robot tracking and warehouse inspection with synthetic sample data.</p><span class="open">Open interactive replay →</span>
-</a>
-</div>
-<h2>Recorded runs</h2>
-<div class="note"><p style="margin:0">No real recordings published yet. Completed offline and explicitly authorized ranked runs will appear here after publishing is enabled in the private Grocerybot project.</p></div>
-<footer>Public replay page · Bot source and GitHub credentials are not hosted here.</footer>
-</main></body></html>
+header{background:#fff;border-bottom:1px solid #e1ebe4}
+header>div{max-width:980px;margin:auto;padding:22px 18px;font-weight:800;letter-spacing:-.04em;font-size:21px}
+header span{color:#749286;font-weight:500;font-size:13px;letter-spacing:0;margin-left:10px}
+main{max-width:980px;margin:0 auto;padding:36px 18px 70px}
+small{color:#83998c;font-size:12px}h1{letter-spacing:-.05em;margin:0 0 7px;font-size:33px}
+.intro{color:#617c6c;line-height:1.6;margin:0 0 24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.run{display:block;padding:18px;background:#fff;border:1px solid #dce8df;border-radius:14px;text-decoration:none;color:inherit}
+.run:hover{border-color:#53a17d;box-shadow:0 4px 20px #0b2a1d10}.runhead{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:16px}
+.runhead span{font-size:12px;color:#769082}.numbers{display:flex;gap:28px;align-items:flex-end;margin-top:21px}
+.numbers>span:not(.arrow){display:flex;flex-direction:column;gap:0}b{font-size:27px;font-variant-numeric:tabular-nums}
+.arrow{margin-left:auto;color:#21865b;font-size:12px;font-weight:700;white-space:nowrap}.empty{color:#617c6c}
+footer{color:#81968b;font-size:12px;margin-top:26px}
+</style></head><body>
+<header><div>grocerybot <span>/ replay archive</span></div></header>
+<main><small>PUBLIC REPLAYS</small><h1>Warehouse runs</h1>
+<p class="intro">Watch recorded offline simulations and authorized ranked games, round by round.
+Replays contain public game observations only. Bot source code stays private.</p>
+<div class="grid"><a class="run" href="runs/demo.html"><div class="runhead"><strong>Warehouse demo</strong><span>Synthetic · interactive preview</span></div><div class="numbers"><span><b>▶</b><small>Test playback</small></span><span class="arrow">Open demo →</span></div></a><a class="run" href="runs/offline-nightmare-eaf877743862aa2b.html"><div class="runhead"><strong>Nightmare</strong><span>offline · 2026-10-24</span></div><div class="numbers"><span><b>268</b><small>Score</small></span><span><b>24</b><small>Orders</small></span><span class="arrow">View replay →</span></div></a><a class="run" href="runs/offline-expert-c1d9cc704b41ddd2.html"><div class="runhead"><strong>Expert</strong><span>offline · 2026-10-24</span></div><div class="numbers"><span><b>181</b><small>Score</small></span><span><b>18</b><small>Orders</small></span><span class="arrow">View replay →</span></div></a><a class="run" href="runs/offline-hard-eae03421281a913d.html"><div class="runhead"><strong>Hard</strong><span>offline · 2026-10-24</span></div><div class="numbers"><span><b>212</b><small>Score</small></span><span><b>24</b><small>Orders</small></span><span class="arrow">View replay →</span></div></a><a class="run" href="runs/offline-medium-b59f738312f904a6.html"><div class="runhead"><strong>Medium</strong><span>offline · 2026-10-24</span></div><div class="numbers"><span><b>210</b><small>Score</small></span><span><b>23</b><small>Orders</small></span><span class="arrow">View replay →</span></div></a><a class="run" href="runs/offline-easy-821c4c5e08329192.html"><div class="runhead"><strong>Easy</strong><span>offline · 2026-10-24</span></div><div class="numbers"><span><b>165</b><small>Score</small></span><span><b>20</b><small>Orders</small></span><span class="arrow">View replay →</span></div></a></div>
+<footer>5 runs · Data is publicly viewable · No sign-in required</footer></main></body></html>

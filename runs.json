@@ -1,1 +1,52 @@
-[]
+[
+  {
+    "id": "offline-nightmare-eaf877743862aa2b",
+    "file": "runs/offline-nightmare-eaf877743862aa2b.html",
+    "source": "offline",
+    "difficulty": "Nightmare",
+    "score": 268,
+    "orders": 24,
+    "rounds": 500,
+    "published_at": "2026-10-24T12:35:00+00:00"
+  },
+  {
+    "id": "offline-expert-c1d9cc704b41ddd2",
+    "file": "runs/offline-expert-c1d9cc704b41ddd2.html",
+    "source": "offline",
+    "difficulty": "Expert",
+    "score": 181,
+    "orders": 18,
+    "rounds": 300,
+    "published_at": "2026-10-24T12:34:50+00:00"
+  },
+  {
+    "id": "offline-hard-eae03421281a913d",
+    "file": "runs/offline-hard-eae03421281a913d.html",
+    "source": "offline",
+    "difficulty": "Hard",
+    "score": 212,
+    "orders": 24,
+    "rounds": 300,
+    "published_at": "2026-10-24T12:34:48+00:00"
+  },
+  {
+    "id": "offline-medium-b59f738312f904a6",
+    "file": "runs/offline-medium-b59f738312f904a6.html",
+    "source": "offline",
+    "difficulty": "Medium",
+    "score": 210,
+    "orders": 23,
+    "rounds": 300,
+    "published_at": "2026-10-24T12:34:47+00:00"
+  },
+  {
+    "id": "offline-easy-821c4c5e08329192",
+    "file": "runs/offline-easy-821c4c5e08329192.html",
+    "source": "offline",
+    "difficulty": "Easy",
+    "score": 165,
+    "orders": 20,
+    "rounds": 300,
+    "published_at": "2026-10-24T12:34:46+00:00"
+  }
+]
