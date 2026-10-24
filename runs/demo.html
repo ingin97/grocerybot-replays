@@ -77,26 +77,50 @@ body.replay-focus{overflow:hidden;overscroll-behavior:none}
 #workspace{display:flex;flex-direction:column}.layout{order:0}.metrics{order:1}.footer-note{order:2}
 .controls #first,.controls #last{display:none}.map-panel.focus .controls #first,.map-panel.focus .controls #last{display:inline-block}.map-panel .panel-head #sourceLabel{display:none}}
 @media(max-height:460px) and (orientation:landscape){.map-panel.focus .controls{bottom:calc(65px + env(safe-area-inset-bottom));padding:5px 9px}.map-panel.focus .timeline{height:calc(65px + env(safe-area-inset-bottom));padding:5px 13px calc(4px + env(safe-area-inset-bottom))}.map-panel.focus .timeline .muted{display:none}}
+
+/* Replay-first presentation: controls, map and metadata before optional diagnostics. */
+.header{padding:15px 20px}.brand{color:#24473a;text-decoration:none}
+main{max-width:1180px;padding:18px 20px 48px}
+.replay-intro{padding:5px 1px 16px}.replay-intro h1{font-size:clamp(23px,4vw,35px);margin:5px 0 7px}
+.run-meta,.run-stats{display:flex;flex-wrap:wrap;align-items:center;gap:7px 14px;color:#667e73;font-size:13px;line-height:1.5}
+.run-stats{padding-top:9px;color:#314f40;font-size:14px;font-weight:650;font-variant-numeric:tabular-nums}
+.layout{display:block}.layout>.map-panel{width:100%}
+.map-panel .panel-head{padding:10px 15px}.map-panel .panel-head strong{font-size:13px;color:#6b8278;font-weight:600}
+.replay-details{margin-top:16px;border:1px solid #dfe8e4;border-radius:12px;background:#fff}
+.replay-details summary{list-style:none;cursor:pointer;padding:15px 18px;color:#385f4c;font-size:14px;font-weight:700}
+.replay-details summary::-webkit-details-marker{display:none}
+.replay-details summary:before{content:"›";display:inline-block;margin-right:10px;transition:transform .15s}
+.replay-details[open] summary:before{transform:rotate(90deg)}
+.replay-details summary span{font-size:12px;color:#91a39a;font-weight:400;margin-left:7px}
+.details-content{padding:0 14px 15px}.details-content .metrics{margin:5px 0 13px}
+.details-content .inspector{box-shadow:none}.details-content .inspector .panel-head{background:#fafcfb}
+#workspace{display:block!important}#workspace[hidden]{display:none!important}
+#empty{max-width:650px;margin:24px auto;padding:40px 20px}
+.legend{padding:8px 15px;font-size:10px}.controls{padding:10px 15px}
+.timeline{padding:0 15px 14px}.footer-note{margin:16px 0 2px}
+@media(max-width:540px){.header{padding:12px 14px}main{padding:15px 10px 38px}
+.replay-intro{padding:0 3px 14px}.run-meta,.run-stats{font-size:12px;gap:4px 10px}
+.run-stats{font-size:13px}.map-panel .panel-head{padding:9px 12px}
+.replay-details summary span{display:block;margin:3px 0 0 20px}.details-content{padding:0 8px 10px}
+.details-content .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
 </style>
 </head>
 <body>
-<header><div class="header"><div class="brand">grocerybot <small>/ replay lab</small></div><div class="header-actions"><span class="muted">Runs stay in your browser</span><label class="btn primary" for="upload">Open JSONL / JSON</label><input type="file" id="upload" accept=".jsonl,.json,application/json"><button class="btn" id="demo">Demo</button></div></div></header>
+<header><div class="header"><a class="brand" href="../" id="archiveLink">← grocerybot <small>/ replays</small></a></div></header>
 <main>
-<div class="eyebrow">Visual debugging</div>
-<h1>Replay a warehouse run</h1>
-<p style="margin:0 0 17px">Inspect robot routes, shelves, truck orders and stalled moves — step by step. Works with locally recorded offline and ranked runs.</p>
 <div id="notice" class="warn hidden" role="alert"></div>
-<div id="empty"><div class="drop-icon">↥</div><h2>Drop a replay here</h2><p>Open a single recorded game (.jsonl or .json). Files are processed locally; no server or account connection is required.</p><label class="btn primary" for="upload">Choose replay file</label> <button class="btn" id="demoEmpty">Explore demo</button></div>
+<div id="empty"><h2>Open a replay</h2><p>Choose a recorded Grocerybot game, or explore the sample warehouse. Files stay on your device.</p><label class="btn primary" for="upload">Open replay file</label> <input type="file" id="upload" accept=".jsonl,.json,application/json"> <button class="btn" id="demoEmpty">Try demo</button></div>
 <div id="workspace" hidden>
-<div class="metrics">
-<div class="metric"><div class="eyebrow">Score</div><div class="value" id="score">—</div></div>
-<div class="metric"><div class="eyebrow">Orders completed</div><div class="value" id="orders">—</div></div>
-<div class="metric"><div class="eyebrow">Robots</div><div class="value" id="robots">—</div></div>
-<div class="metric"><div class="eyebrow">Blocked moves so far</div><div class="value" id="blocked">—</div></div>
+<div class="replay-intro">
+<div class="eyebrow" id="sourceLabel">Recorded replay</div>
+<h1 id="runTitle">Warehouse replay</h1>
+<div class="run-meta" id="runMeta"></div>
+<div class="run-stats" id="runStats"></div>
 </div>
 <div class="layout">
 <div class="panel map-panel" id="mapPanel">
-<div class="panel-head"><strong id="runTitle">Warehouse</strong><span class="pill" id="sourceLabel">Replay</span><button class="btn" type="button" id="focusOpen" aria-expanded="false" aria-label="Open immersive map" title="Open larger map in landscape">⛶ Focus</button></div>
+<div class="panel-head"><strong>Warehouse</strong><button class="btn" type="button" id="focusOpen" aria-expanded="false" aria-label="Open immersive map" title="Open larger map in landscape">⛶ Focus</button></div>
 <div class="map-scroll" id="mapViewport" aria-label="Warehouse map. Pinch to zoom, drag to pan when zoomed.">
   <canvas id="map" aria-label="Warehouse map. Tap a robot to inspect it."></canvas>
   <span class="focus-hint" id="focusHint">Tap map for playback controls</span>
@@ -106,14 +130,26 @@ body.replay-focus{overflow:hidden;overscroll-behavior:none}
 <div class="controls"><button class="btn" id="first" title="First round">|◀</button><button class="btn" id="back" title="Previous round">◀</button><button class="btn primary" id="play" title="Play / pause">▶ Play</button><button class="btn" id="forward" title="Next round">▶</button><button class="btn" id="last" title="Last round">▶|</button><select id="speed" aria-label="Playback speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option><option value="8">8×</option></select><span id="roundText">Round 0</span></div>
 <div class="timeline"><input type="range" id="seek" min="0" max="0" value="0" aria-label="Replay round"><div class="markers" id="markers"></div><div class="muted" style="margin-top:6px">Green = completed order · Orange = blocked action. Click a marker to jump.</div></div>
 </div>
+
+</div>
+<details class="replay-details" id="replayDetails">
+<summary>Show replay details <span>Robot actions, trucks and events</span></summary>
+<div class="details-content">
+<div class="metrics">
+<div class="metric"><div class="eyebrow">Score</div><div class="value" id="score">—</div></div>
+<div class="metric"><div class="eyebrow">Orders completed</div><div class="value" id="orders">—</div></div>
+<div class="metric"><div class="eyebrow">Robots</div><div class="value" id="robots">—</div></div>
+<div class="metric"><div class="eyebrow">Blocked moves so far</div><div class="value" id="blocked">—</div></div>
+</div>
 <div class="panel inspector">
 <div class="panel-head"><strong>Inspector</strong><span class="muted">Click a robot on the map</span></div>
 <section><h3>Selected robot</h3><div id="robotInfo" class="detail">Select a robot on the map.</div></section>
 <section><h3>Trucks and orders</h3><div id="truckInfo" class="detail"></div></section>
 <section><h3>Important events</h3><div id="events" class="events"></div></section>
 </div>
+<div class="footer-note">Blocked moves indicate a position did not change; this does not prove a collision. Only recorded observations and actions are shown.</div>
 </div>
-<div class="footer-note">Only observations and issued actions are shown. A blocked move means the position did not change; it does not by itself prove a collision. Planning intentions are not part of the public game protocol.</div>
+</details>
 </div>
 </main>
 <script>
@@ -296,7 +332,23 @@ function inspectEvents(){
 }
 function load(value){stop();if(mapPanel.classList.contains("focus"))exitFocus();run=value;index=0;selected=value.states[0].bots[0]?.id??0;
   zoom=1;panX=0;panY=0;pointers.clear();pinch=null;inspectEvents();$("empty").hidden=true;$("workspace").hidden=false;clearWarn();
-  $("runTitle").textContent=value.name;$("sourceLabel").textContent=value.metadata?.source|| (value.name.toLowerCase().includes("live")?"Live recording":"Offline / recorded");
+  const pub=value.published;
+  const difficulty=pub?.difficulty || ({1:"Easy",3:"Medium",5:"Hard",10:"Expert",20:"Nightmare"}[value.states[0].bots.length]||"Warehouse");
+  const type=pub?.source || value.metadata?.source || (value.name.includes("synthetic")?"Demo":"Recorded");
+  $("runTitle").textContent=difficulty+" replay";
+  $("sourceLabel").textContent=String(type).toUpperCase()+" REPLAY";
+  const meta=$("runMeta");meta.replaceChildren();
+  if(pub?.published_at){const date=new Date(pub.published_at);if(!Number.isNaN(date.getTime()))meta.appendChild(node("span","Published "+date.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})));}
+  if(pub?.id)meta.appendChild(node("span","Replay #"+String(pub.id).slice(-8)));
+  else if(value.result?.game_id)meta.appendChild(node("span","Game "+String(value.result.game_id)));
+  else if(!String(type).toLowerCase().includes("demo"))meta.appendChild(node("span",value.name));
+  const score=pub?.score ?? value.result?.score;
+  const orders=pub?.orders ?? value.result?.orders_completed;
+  const rounds=pub?.rounds ?? value.states.length;
+  const stats=$("runStats");stats.replaceChildren();
+  for(const fact of [typeof score==="number"?"Score "+score:null,typeof orders==="number"?orders+" orders":null,rounds+" rounds",value.states[0].bots.length+" robots"]){
+    if(fact)stats.appendChild(node("span",fact));
+  }
   $("seek").max=String(value.states.length-1);$("seek").value="0";buildMarkers();render();}
 function buildMarkers(){
   const root=$("markers");root.replaceChildren();if(run.states.length<2)return;
@@ -437,14 +489,17 @@ function demo(){
   const actions=new Map([[0,[{bot:0,action:"move_right"}]],[1,[{bot:0,action:"move_up"}]],[2,[{bot:0,action:"move_up"}]],[3,[{bot:0,action:"wait"}]],[4,[{bot:0,action:"pick_up",item_id:"item_0"}]],[5,[{bot:0,action:"move_up"}]],[6,[{bot:0,action:"move_right"}]],[7,[{bot:0,action:"move_right"}]],[8,[{bot:0,action:"move_up"}]],[9,[{bot:0,action:"load"}]]]);
   load({name:"Example warehouse · synthetic demonstration",states,actions,result:{type:"game_over",score:6,orders_completed:1},metadata:{source:"Sample only"}});
 }
-$("demo").addEventListener("click",demo);$("demoEmpty").addEventListener("click",demo);
+$("demoEmpty").addEventListener("click",demo);
 // Synthetic public replay; no ranked game.
 demo();
 const embedded=$("embedded-replay");
 if(embedded){
   try{const payload=JSON.parse(embedded.textContent);
     if(!payload||typeof payload.content!=="string")throw Error("Invalid embedded replay");
-    load(parseText(payload.content, String(payload.name||"Recorded run")));
+    const parsed=parseText(payload.content, String(payload.name||"Recorded run"));
+    const pub=$("published-run");
+    if(pub){const info=JSON.parse(pub.textContent);if(info&&typeof info==="object"&&!Array.isArray(info))parsed.published=info;}
+    load(parsed);
   }catch(error){warn("Cannot open bundled replay: "+error.message);}
 }
 
