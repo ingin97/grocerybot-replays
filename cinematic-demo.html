@@ -709,44 +709,33 @@ function isoDock(truck,x,y,grid,g){
   if(active)isoEllipse(x+.80,y+.17,24,3,2,"#8cffc3",grid,g);
 }
 function isoRobot(b,blocked,grid,g){
-  const [x,y]=b.position,selectedBot=b.id===selected;
-  isoEllipse(x+.50,y+.51,1,22,11,"#051420c7",grid,g);
-  if(selectedBot){
-    const [px,py]=isoPoint(x+.5,y+.5,1,grid,g);
-    ctx.beginPath();ctx.ellipse(px,py,25,14,0,0,Math.PI*2);
-    ctx.lineWidth=3;ctx.strokeStyle="#ffdb91";ctx.stroke();
-    ctx.beginPath();ctx.ellipse(px,py,19,10,0,0,Math.PI*2);
-    ctx.lineWidth=2;ctx.strokeStyle="#fff8e5b3";ctx.stroke();
+  const [x,y]=b.position,active=b.id===selected;
+  // Low-profile autonomous cart, deliberately below shelf/product height.
+  isoEllipse(x+.5,y+.51,1,18,8,"#071923b0",grid,g);
+  if(active){
+    const p=isoPoint(x+.5,y+.5,1,grid,g);
+    ctx.beginPath();ctx.ellipse(p[0],p[1],22,12,0,0,Math.PI*2);
+    ctx.strokeStyle="#ffdc91";ctx.lineWidth=2.5;ctx.stroke();
   }
-  // Two rubber driving tracks and a beveled chassis.
-  isoPrism(x+.07,y+.13,3,.15,.69,12,grid,g,"#243947","#102b38","#102632");
-  isoPrism(x+.78,y+.13,3,.15,.69,12,grid,g,"#243947","#102b38","#102632");
-  for(const dx of [.14,.85])for(const dy of [.29,.70]){
-    isoEllipse(x+dx,y+dy,7,3.8,2.5,"#8199a2",grid,g);
+  // Small wheels and a single compact, color-coded chassis.
+  for(const dy of [.24,.70]){
+    isoPrism(x+.19,y+dy,3,.11,.10,5,grid,g,"#263b45","#162b35","#13232e");
+    isoPrism(x+.70,y+dy,3,.11,.10,5,grid,g,"#263b45","#162b35","#13232e");
   }
-  isoPrism(x+.18,y+.13,12,.63,.72,14,grid,g,color(b.id),"#1f657a","#174258");
-  // Reflective canopy, status light and twin headlight lenses.
-  isoPrism(x+.25,y+.22,27,.48,.51,4,grid,g,"#e0f8f3","#82b6c1","#496d88");
-  for(const dy of [.29,.57]){
-    const p=isoPoint(x+.20,y+dy,20,grid,g);
-    ctx.fillStyle="#e9ffff";ctx.beginPath();ctx.arc(p[0],p[1],3.4,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle="#89f3ef";ctx.beginPath();ctx.arc(p[0],p[1],1.5,0,Math.PI*2);ctx.fill();
-  }
-  isoEllipse(x+.52,y+.48,32,5,2.7,selectedBot?"#ffce78":"#8dede4",grid,g);
-
-  // Product chips are the exact observed inventory and not speculative planned cargo.
-  const goods=(b.inventory||[]).slice(0,3);
+  isoPrism(x+.20,y+.20,7,.61,.59,10,grid,g,color(b.id),"#286477","#1b4758");
+  isoPrism(x+.28,y+.29,17,.44,.39,2,grid,g,"#d1e9e5","#78a6b4","#567c91");
+  // Two understated front LEDs and a single status light.
+  for(const dy of [.34,.62])isoEllipse(x+.20,y+dy,12,2.4,1.6,"#d4fff7",grid,g);
+  isoEllipse(x+.5,y+.49,20,3,1.6,active?"#ffd98c":"#7be5cf",grid,g);
+  // Cargo remains identifiable without making the vehicle taller than a shelf.
+  const goods=(b.inventory||[]).slice(0,2);
   for(let i=0;i<goods.length;i++){
-    isoItemIcon(String(goods[i]),x+.20+i*.25,y+.34,47,grid,g);
+    const p=isoPoint(x+.39+i*.23,y+.50,24,grid,g);
+    ctx.fillStyle=productStyle(String(goods[i])).color;
+    ctx.beginPath();ctx.arc(p[0],p[1],4.3,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle="#e9fff4";ctx.lineWidth=1;ctx.stroke();
   }
-  if(blocked){
-    const p=isoPoint(x+.88,y+.06,45,grid,g);
-    ctx.beginPath();ctx.arc(p[0],p[1],7,0,Math.PI*2);
-    ctx.fillStyle="#f07f5a";ctx.fill();
-    ctx.lineWidth=2;ctx.strokeStyle="#fff2e0";ctx.stroke();
-    ctx.fillStyle="#fff";ctx.font="bold 10px sans-serif";
-
-  }
+  if(blocked)isoEllipse(x+.80,y+.19,23,4,2.5,"#f07f5a",grid,g);
 }
 function renderCinematicMap(state){
   const grid=state.grid,w=grid.width,h=grid.height;
