@@ -1,5 +1,15 @@
 [
   {
+    "id": "live-hard-a38e7512f2ca57a6",
+    "file": "runs/live-hard-a38e7512f2ca57a6.html",
+    "source": "live",
+    "difficulty": "Hard",
+    "score": 250,
+    "orders": 28,
+    "rounds": 300,
+    "published_at": "2026-10-25T22:28:52+00:00"
+  },
+  {
     "id": "live-expert-9ee64606b16fbdb3",
     "file": "runs/live-expert-9ee64606b16fbdb3.html",
     "source": "live",
