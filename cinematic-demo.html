@@ -671,7 +671,7 @@ function isoRack(items,x,y,grid,g){
   const count=Math.min(items.length,4);
   for(let i=0;i<count;i++){
     const ix=x+.17+(i%2)*.39,iy=y+.16,level=i<2?9:26;
-    isoPackage(ix,iy,level,String(items[i].type||"?"),grid,g);
+    isoItemIcon(String(items[i].type||"?"),ix+.1,iy+.1,level+9,grid,g);
   }
   for(const [ox,oy] of [[.08,.1],[.91,.1],[.08,.9],[.91,.9]]){
     isoBeam(x+ox,y+oy,1,x+ox,y+oy,42,grid,g,"#7796a7",3.1);
@@ -684,16 +684,36 @@ function isoRack(items,x,y,grid,g){
   const p=isoPoint(x+.5,y+.93,29,grid,g);
   ctx.fillStyle="#163440";ctx.fillRect(p[0]-15,p[1]-6,30,12);
   ctx.strokeStyle="#90adb0";ctx.lineWidth=1;ctx.strokeRect(p[0]-15,p[1]-6,30,12);
-  isoLabel(productStyle(name).code,x,y+.43,29,grid,g,"#fff4dc",9);
+  // Shelf items are shown as artwork rather than text labels.
   if(items.length>4)isoLabel("×"+items.length,x+.27,y-.30,46,grid,g,"#ffdfa6",9);
 }
 function isoWall(x,y,grid,g){
-  isoEllipse(x+.5,y+.55,1,26,10,"#050d1e66",grid,g);
-  isoBlock(x,y,37,grid,g,"#718795","#314e60","#264353");
-  isoBeam(x+.10,y+.12,36,x+.90,y+.12,36,grid,g,"#a3c2c6",2);
-  isoBeam(x+.10,y+.88,28,x+.90,y+.88,28,grid,g,"#496c77",2);
-  // Painted panel stripe adds architectural scale without mislabeling obstacles.
-  isoBeam(x+.12,y+.88,15,x+.90,y+.88,15,grid,g,"#e5ad5d",2);
+  // Translucent barrier: visually lightweight while still indicating obstacles.
+  isoTile(x,y,2,grid,g,"#9ad9e52b","#b6edf0aa");
+  for(const [ox,oy] of [[.1,.1],[.9,.1],[.1,.9],[.9,.9]])
+    isoBeam(x+ox,y+oy,2,x+ox,y+oy,35,grid,g,"#9edbe35c",1.2);
+}
+function isoItemIcon(name,x,y,z,grid,g){
+  const type=String(name||"").toLowerCase(),p=isoPoint(x,y,z,grid,g);
+  ctx.save();ctx.translate(p[0],p[1]);ctx.scale(.8,.8);
+  ctx.strokeStyle="#203e45";ctx.lineWidth=1.5;
+  if(/milk|melk|water|juice|drink|soda/.test(type)){
+    ctx.fillStyle=/milk|melk/.test(type)?"#f6faf2":"#ffb86e";
+    ctx.beginPath();ctx.moveTo(-6,-10);ctx.lineTo(4,-10);ctx.lineTo(7,-5);ctx.lineTo(7,9);ctx.lineTo(-7,9);ctx.lineTo(-7,-5);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.fillStyle="#56a4c6";ctx.fillRect(-5,-13,9,4);ctx.fillRect(-5,0,10,5);
+  }else if(/bread|brød|bun|bake/.test(type)){
+    ctx.fillStyle="#d8904a";ctx.beginPath();ctx.ellipse(0,1,10,8,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.strokeStyle="#fff0bb";for(let i=-1;i<=1;i++){ctx.beginPath();ctx.moveTo(i*5-2,-3);ctx.lineTo(i*5+1,3);ctx.stroke();}
+  }else if(/egg/.test(type)){
+    for(let i=-1;i<=1;i++){ctx.fillStyle="#fff1d6";ctx.beginPath();ctx.ellipse(i*6,2,4,7,0,0,Math.PI*2);ctx.fill();ctx.stroke();}
+  }else if(/apple|fruit|banana|orange/.test(type)){
+    ctx.fillStyle="#e65c4e";ctx.beginPath();ctx.arc(0,2,8,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.fillStyle="#73bd6e";ctx.beginPath();ctx.ellipse(3,-9,5,2,-.5,0,Math.PI*2);ctx.fill();
+  }else{
+    ctx.fillStyle=productStyle(name).color;ctx.fillRect(-9,-7,18,16);
+    ctx.strokeRect(-9,-7,18,16);ctx.fillStyle="#ffffffa8";ctx.fillRect(-5,-4,10,3);
+  }
+  ctx.restore();
 }
 function isoDock(truck,x,y,grid,g){
   const active=truck.state==="docked";
@@ -741,7 +761,7 @@ function isoRobot(b,blocked,grid,g){
   // Product chips are the exact observed inventory and not speculative planned cargo.
   const goods=(b.inventory||[]).slice(0,3);
   for(let i=0;i<goods.length;i++){
-    isoPackage(x+.12+i*.25,y+.22,34,String(goods[i]),grid,g);
+    isoItemIcon(String(goods[i]),x+.20+i*.25,y+.34,43,grid,g);
   }
   if(blocked){
     const p=isoPoint(x+.88,y+.06,45,grid,g);
