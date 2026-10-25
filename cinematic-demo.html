@@ -627,13 +627,6 @@ function isoBlock(x,y,height,grid,g,top,left,right){
   isoPolygon([p01,p11,b11,b01],left,"#061f2766");
   isoPolygon([p00,p10,p11,p01],top,"#d5fcf533");
 }
-function isoLabel(text,x,y,z,grid,g,fill="#fff",size=11){
-  const [px,py]=isoPoint(x+.5,y+.5,z,grid,g);
-  ctx.font="800 "+size+"px system-ui,sans-serif";
-  ctx.textAlign="center";ctx.textBaseline="middle";
-  ctx.lineWidth=3;ctx.strokeStyle="#09232ad9";ctx.strokeText(String(text),px,py);
-  ctx.fillStyle=fill;ctx.fillText(String(text),px,py);
-}
 function isoEllipse(x,y,z,rx,ry,fill,grid,g){
   const [px,py]=isoPoint(x,y,z,grid,g);
   ctx.beginPath();ctx.ellipse(px,py,rx,ry,0,0,Math.PI*2);
@@ -670,7 +663,7 @@ function isoRack(items,x,y,grid,g){
     const ix=x+.27+(i%2)*.39,iy=y+.25+Math.floor(i/2)*.38;
     isoItemIcon(String(items[i].type||"?"),ix,iy,18,grid,g);
   }
-  if(items.length>4)isoLabel("×"+items.length,x+.29,y-.25,21,grid,g,"#ffdfa6",10);
+
 }
 function isoWall(x,y,grid,g){
   // Invisible vertical walls: a low, translucent floor marking retains obstacle visibility.
@@ -712,7 +705,7 @@ function isoDock(truck,x,y,grid,g){
     isoBeam(x+.26,y+.74,14+i*3,x+.76,y+.74,14+i*3,grid,g,"#45606e",1.3);
   }
   isoBeam(x+.14,y+.17,23,x+.75,y+.17,23,grid,g,edge,2.5);
-  isoLabel("T"+truck.id,x,y,27,grid,g,"#ffffff",10);
+
   if(active)isoEllipse(x+.80,y+.17,24,3,2,"#8cffc3",grid,g);
 }
 function isoRobot(b,blocked,grid,g){
@@ -740,7 +733,7 @@ function isoRobot(b,blocked,grid,g){
     ctx.fillStyle="#89f3ef";ctx.beginPath();ctx.arc(p[0],p[1],1.5,0,Math.PI*2);ctx.fill();
   }
   isoEllipse(x+.52,y+.48,32,5,2.7,selectedBot?"#ffce78":"#8dede4",grid,g);
-  isoLabel(b.id,x,y,18,grid,g,"#fff",11);
+
   // Product chips are the exact observed inventory and not speculative planned cargo.
   const goods=(b.inventory||[]).slice(0,3);
   for(let i=0;i<goods.length;i++){
@@ -752,7 +745,7 @@ function isoRobot(b,blocked,grid,g){
     ctx.fillStyle="#f07f5a";ctx.fill();
     ctx.lineWidth=2;ctx.strokeStyle="#fff2e0";ctx.stroke();
     ctx.fillStyle="#fff";ctx.font="bold 10px sans-serif";
-    ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("!",p[0],p[1]+.5);
+
   }
 }
 function renderCinematicMap(state){
