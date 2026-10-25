@@ -601,7 +601,7 @@ function renderMap(state){
 /* Oblique, depth-sorted 2.5D projection driven exclusively by recorded state.
    No game-owned sprites are copied, fetched, or required for offline previews. */
 function isoGeometry(grid){
-  const sx=27,sy=14,pad=55,lift=46;
+  const sx=32,sy=17,pad=28,lift=32;
   return {sx,sy,pad,lift,width:(grid.width+grid.height)*sx+pad*2,
     height:(grid.width+grid.height)*sy+pad*2+lift};
 }
@@ -670,8 +670,8 @@ function isoRack(items,x,y,grid,g){
   }
   const count=Math.min(items.length,4);
   for(let i=0;i<count;i++){
-    const ix=x+.17+(i%2)*.39,iy=y+.16,level=i<2?9:26;
-    isoItemIcon(String(items[i].type||"?"),ix+.1,iy+.1,level+9,grid,g);
+    const ix=x+.20+(i%2)*.39,iy=y+.28,level=i<2?9:26;
+    isoItemIcon(String(items[i].type||"?"),ix+.1,iy+.1,level+13,grid,g);
   }
   for(const [ox,oy] of [[.08,.1],[.91,.1],[.08,.9],[.91,.9]]){
     isoBeam(x+ox,y+oy,1,x+ox,y+oy,42,grid,g,"#7796a7",3.1);
@@ -688,14 +688,12 @@ function isoRack(items,x,y,grid,g){
   if(items.length>4)isoLabel("×"+items.length,x+.27,y-.30,46,grid,g,"#ffdfa6",9);
 }
 function isoWall(x,y,grid,g){
-  // Translucent barrier: visually lightweight while still indicating obstacles.
-  isoTile(x,y,2,grid,g,"#9ad9e52b","#b6edf0aa");
-  for(const [ox,oy] of [[.1,.1],[.9,.1],[.1,.9],[.9,.9]])
-    isoBeam(x+ox,y+oy,2,x+ox,y+oy,35,grid,g,"#9edbe35c",1.2);
+  // Invisible vertical walls: a low, translucent floor marking retains obstacle visibility.
+  isoTile(x,y,1,grid,g,"#8bd4df16","#a5e8e55c");
 }
 function isoItemIcon(name,x,y,z,grid,g){
   const type=String(name||"").toLowerCase(),p=isoPoint(x,y,z,grid,g);
-  ctx.save();ctx.translate(p[0],p[1]);ctx.scale(.8,.8);
+  ctx.save();ctx.translate(p[0],p[1]);ctx.scale(1.22,1.22);
   ctx.strokeStyle="#203e45";ctx.lineWidth=1.5;
   if(/milk|melk|water|juice|drink|soda/.test(type)){
     ctx.fillStyle=/milk|melk/.test(type)?"#f6faf2":"#ffb86e";
@@ -761,7 +759,7 @@ function isoRobot(b,blocked,grid,g){
   // Product chips are the exact observed inventory and not speculative planned cargo.
   const goods=(b.inventory||[]).slice(0,3);
   for(let i=0;i<goods.length;i++){
-    isoItemIcon(String(goods[i]),x+.20+i*.25,y+.34,43,grid,g);
+    isoItemIcon(String(goods[i]),x+.20+i*.25,y+.34,47,grid,g);
   }
   if(blocked){
     const p=isoPoint(x+.88,y+.06,45,grid,g);
