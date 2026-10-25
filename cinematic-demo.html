@@ -662,30 +662,15 @@ function isoPackage(x,y,z,colorName,grid,g){
   isoBeam(x+.09,y+.04,z+9,x+.09,y+.22,z+9,grid,g,"#d9fcf3a6",1);
 }
 function isoRack(items,x,y,grid,g){
-  isoEllipse(x+.5,y+.55,1,24,10,"#07172180",grid,g);
-  // Steel uprights, two levels, and real color-coded boxes replace the solid tan block.
-  for(const z of [6,23]){
-    isoPrism(x+.08,y+.09,z,.83,.82,3,grid,g,"#d8a66c","#5d7384","#405667");
-    isoBeam(x+.08,y+.12,z+3,x+.91,y+.12,z+3,grid,g,"#f6d9a7",2);
-  }
+  // One low display plinth: no unused second shelf or empty upper frame.
+  isoEllipse(x+.5,y+.55,1,23,9,"#07172180",grid,g);
+  isoPrism(x+.10,y+.10,2,.80,.80,5,grid,g,"#b9a17e","#586e79","#405767");
   const count=Math.min(items.length,4);
   for(let i=0;i<count;i++){
-    const ix=x+.20+(i%2)*.39,iy=y+.28,level=i<2?9:26;
-    isoItemIcon(String(items[i].type||"?"),ix+.1,iy+.1,level+13,grid,g);
+    const ix=x+.27+(i%2)*.39,iy=y+.25+Math.floor(i/2)*.38;
+    isoItemIcon(String(items[i].type||"?"),ix,iy,18,grid,g);
   }
-  for(const [ox,oy] of [[.08,.1],[.91,.1],[.08,.9],[.91,.9]]){
-    isoBeam(x+ox,y+oy,1,x+ox,y+oy,42,grid,g,"#7796a7",3.1);
-    isoBeam(x+ox-.012,y+oy,2,x+ox-.012,y+oy,41,grid,g,"#b8d2db80",1.2);
-  }
-  isoBeam(x+.08,y+.1,41,x+.91,y+.1,41,grid,g,"#ddaa68",3);
-  isoBeam(x+.09,y+.89,41,x+.9,y+.89,41,grid,g,"#ddaa68",3);
-  // Small shelf identifier plaque in front, attached to the structure.
-  const name=String(items[0].type||"?");
-  const p=isoPoint(x+.5,y+.93,29,grid,g);
-  ctx.fillStyle="#163440";ctx.fillRect(p[0]-15,p[1]-6,30,12);
-  ctx.strokeStyle="#90adb0";ctx.lineWidth=1;ctx.strokeRect(p[0]-15,p[1]-6,30,12);
-  // Shelf items are shown as artwork rather than text labels.
-  if(items.length>4)isoLabel("×"+items.length,x+.27,y-.30,46,grid,g,"#ffdfa6",9);
+  if(items.length>4)isoLabel("×"+items.length,x+.29,y-.25,21,grid,g,"#ffdfa6",10);
 }
 function isoWall(x,y,grid,g){
   // Invisible vertical walls: a low, translucent floor marking retains obstacle visibility.
