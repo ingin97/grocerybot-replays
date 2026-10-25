@@ -1,5 +1,15 @@
 [
   {
+    "id": "live-nightmare-2eb3cfd2eb803e0e",
+    "file": "runs/live-nightmare-2eb3cfd2eb803e0e.html",
+    "source": "live",
+    "difficulty": "Nightmare",
+    "score": 304,
+    "orders": 28,
+    "rounds": 500,
+    "published_at": "2026-10-25T22:14:23+00:00"
+  },
+  {
     "id": "live-nightmare-7c39da3691544639",
     "file": "runs/live-nightmare-7c39da3691544639.html",
     "source": "live",
