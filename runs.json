@@ -1,5 +1,25 @@
 [
   {
+    "id": "live-medium-37a9742a0190ad9b",
+    "file": "runs/live-medium-37a9742a0190ad9b.html",
+    "source": "live",
+    "difficulty": "Medium",
+    "score": 239,
+    "orders": 27,
+    "rounds": 300,
+    "published_at": "2026-10-26T13:47:47+00:00"
+  },
+  {
+    "id": "live-medium-725c58dd6f66af2f",
+    "file": "runs/live-medium-725c58dd6f66af2f.html",
+    "source": "live",
+    "difficulty": "Medium",
+    "score": 217,
+    "orders": 23,
+    "rounds": 300,
+    "published_at": "2026-10-26T13:46:45+00:00"
+  },
+  {
     "id": "live-medium-6a11b24e20f5c65f",
     "file": "runs/live-medium-6a11b24e20f5c65f.html",
     "source": "live",
