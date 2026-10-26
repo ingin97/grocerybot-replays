@@ -1,5 +1,55 @@
 [
   {
+    "id": "live-medium-10d7ab45c98f8090",
+    "file": "runs/live-medium-10d7ab45c98f8090.html",
+    "source": "live",
+    "difficulty": "Medium",
+    "score": 240,
+    "orders": 26,
+    "rounds": 300,
+    "published_at": "2026-10-26T15:47:39+00:00"
+  },
+  {
+    "id": "live-medium-7fcb3d5e4cf740ed",
+    "file": "runs/live-medium-7fcb3d5e4cf740ed.html",
+    "source": "live",
+    "difficulty": "Medium",
+    "score": 230,
+    "orders": 25,
+    "rounds": 300,
+    "published_at": "2026-10-26T15:46:36+00:00"
+  },
+  {
+    "id": "live-medium-2d308145354e4e24",
+    "file": "runs/live-medium-2d308145354e4e24.html",
+    "source": "live",
+    "difficulty": "Medium",
+    "score": 220,
+    "orders": 24,
+    "rounds": 300,
+    "published_at": "2026-10-26T15:45:28+00:00"
+  },
+  {
+    "id": "live-medium-1bb3191538886b4c",
+    "file": "runs/live-medium-1bb3191538886b4c.html",
+    "source": "live",
+    "difficulty": "Medium",
+    "score": 249,
+    "orders": 28,
+    "rounds": 300,
+    "published_at": "2026-10-26T15:44:24+00:00"
+  },
+  {
+    "id": "live-medium-fa26c09127029eae",
+    "file": "runs/live-medium-fa26c09127029eae.html",
+    "source": "live",
+    "difficulty": "Medium",
+    "score": 239,
+    "orders": 27,
+    "rounds": 300,
+    "published_at": "2026-10-26T15:43:20+00:00"
+  },
+  {
     "id": "live-medium-dd3b81e216d6d854",
     "file": "runs/live-medium-dd3b81e216d6d854.html",
     "source": "live",
