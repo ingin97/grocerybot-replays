@@ -1,5 +1,15 @@
 [
   {
+    "id": "live-medium-6a11b24e20f5c65f",
+    "file": "runs/live-medium-6a11b24e20f5c65f.html",
+    "source": "live",
+    "difficulty": "Medium",
+    "score": 192,
+    "orders": 21,
+    "rounds": 300,
+    "published_at": "2026-10-26T13:33:19+00:00"
+  },
+  {
     "id": "live-nightmare-480019b89763b296",
     "file": "runs/live-nightmare-480019b89763b296.html",
     "source": "live",
