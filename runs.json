@@ -1,5 +1,25 @@
 [
   {
+    "id": "live-expert-cd317e649a0f7862",
+    "file": "runs/live-expert-cd317e649a0f7862.html",
+    "source": "live",
+    "difficulty": "Expert",
+    "score": 238,
+    "orders": 24,
+    "rounds": 300,
+    "published_at": "2026-10-29T07:28:22+00:00"
+  },
+  {
+    "id": "live-expert-1a76566e9c6582cb",
+    "file": "runs/live-expert-1a76566e9c6582cb.html",
+    "source": "live",
+    "difficulty": "Expert",
+    "score": 242,
+    "orders": 23,
+    "rounds": 300,
+    "published_at": "2026-10-29T07:28:22+00:00"
+  },
+  {
     "id": "live-expert-9ec60b22ff9dc8a7",
     "file": "runs/live-expert-9ec60b22ff9dc8a7.html",
     "source": "live",
