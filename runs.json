@@ -1,5 +1,15 @@
 [
   {
+    "id": "live-easy-29027d70afd27a7e",
+    "file": "runs/live-easy-29027d70afd27a7e.html",
+    "source": "live",
+    "difficulty": "Easy",
+    "score": 187,
+    "orders": 22,
+    "rounds": 300,
+    "published_at": "2026-10-29T17:24:32+00:00"
+  },
+  {
     "id": "live-nightmare-aad3e4a643ce22fa",
     "file": "runs/live-nightmare-aad3e4a643ce22fa.html",
     "source": "live",
